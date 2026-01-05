@@ -1,0 +1,535 @@
+/* ============================================================================
+   🎨 ANALYSE REÇU - DARK THEME STYLES
+   ============================================================================ */
+
+.analyse-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 30px 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.analyse-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(30, 30, 46, 0.95);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================================
+   📋 HEADER
+   ============================================================================ */
+
+.analyse-header {
+  text-align: center;
+  margin-bottom: 25px;
+  border-bottom: 2px solid rgba(100, 116, 230, 0.3);
+  padding-bottom: 15px;
+}
+
+.analyse-title {
+  font-size: 2rem;
+  color: #e0e0e0;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+}
+
+.analyse-subtitle {
+  color: #a0a0a0;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ============================================================================
+   📦 SECTIONS
+   ============================================================================ */
+
+.analyse-section {
+  margin-bottom: 20px;
+}
+
+/* ============================================================================
+   🔘 BUTTONS
+   ============================================================================ */
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+}
+
+.btn-analyse {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  padding: 18px 40px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 20px;
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+}
+
+.btn-analyse:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6);
+}
+
+.btn-analyse:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-remove {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+/* ============================================================================
+   📁 FILE LIST
+   ============================================================================ */
+
+.file-list {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.file-count {
+  color: #a0a0a0;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+}
+
+.file-count strong {
+  color: #4facfe;
+  font-size: 1.1rem;
+}
+
+.file-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.file-list-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.file-name {
+  color: #e0e0e0;
+  font-size: 0.95rem;
+}
+
+/* ============================================================================
+   📂 EXCEL PATH
+   ============================================================================ */
+
+.excel-path {
+  margin-top: 15px;
+  color: #4facfe;
+  background: rgba(79, 172, 254, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(79, 172, 254, 0.3);
+}
+
+.excel-default {
+  margin-top: 15px;
+  color: #a0a0a0;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* ============================================================================
+   ⚠️ ERROR BOX
+   ============================================================================ */
+
+.error-box {
+  background: rgba(231, 76, 60, 0.2);
+  color: #ff6b6b;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  border: 1px solid rgba(231, 76, 60, 0.5);
+}
+
+/* ============================================================================
+   📊 RESULTS SECTION
+   ============================================================================ */
+
+.results-section {
+  margin-top: 30px;
+}
+
+.results-title {
+  color: #e0e0e0;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+/* ============================================================================
+   🃏 RESULT CARDS
+   ============================================================================ */
+
+.result-card {
+  border-radius: 10px;
+  padding: 15px;
+  border: 1px solid;
+  transition: all 0.3s ease;
+}
+
+.result-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.result-success {
+  background: rgba(46, 213, 115, 0.1);
+  border-color: rgba(46, 213, 115, 0.3);
+}
+
+.result-error {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.result-icon {
+  font-size: 1.5rem;
+}
+
+.result-file-name {
+  color: #e0e0e0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   📋 DATA DISPLAY
+   ============================================================================ */
+
+.result-data {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.data-label {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.data-value {
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.error-text {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ============================================================================
+   📱 RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .analyse-container {
+    padding: 20px 10px;
+  }
+
+  .analyse-card {
+    padding: 20px;
+  }
+
+  .analyse-title {
+    font-size: 2rem;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-analyse {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Progress Bar Styles */
+.progress-section {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: #495057;
+  font-weight: 500;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progress-percentage {
+  font-size: 14px;
+  color: #228be6;
+  font-weight: 600;
+}
+
+.progress-bar-container {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #228be6, #15aabf);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Options Excel */
+.section-title {
+  font-size: 16px;
+  color: #495057;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.excel-options {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.option-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.option-row:hover {
+  background-color: #e9ecef;
+}
+
+.option-row:last-child {
+  margin-bottom: 0;
+}
+
+.option-row input[type="radio"] {
+  margin-top: 5px;
+  margin-right: 12px;
+}
+
+.option-label {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  flex: 1;
+}
+
+.option-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  margin-top: 2px;
+}
+
+.option-description {
+  font-size: 13px;
+  color: #6c757d;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.excel-file-section {
+  margin-top: 15px;
+  padding: 15px;
+  background: #e7f5ff;
+  border-radius: 8px;
+  border: 1px solid #a5d8ff;
+}
+
+.excel-path {
+  margin-top: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.excel-path small {
+  color: #868e96;
+  font-size: 11px;
+}
+
+/* Progress Bar Styles */
+.progress-section {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: #495057;
+  font-weight: 500;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progress-percentage {
+  font-size: 14px;
+  color: #228be6;
+  font-weight: 600;
+}
+
+.progress-bar-container {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #228be6, #15aabf);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Bouton désactivé */
+.btn-analyse:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
