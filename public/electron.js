@@ -1,7 +1,7 @@
 // ============================================================================
 // 🧱 ELECTRON MAIN PROCESS (ARABIC SUPPORT + SAVE DIALOG)
 // ============================================================================
-const { app, BrowserWindow, dialog, ipcMain,shell } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, shell } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const isDev = require("electron-is-dev");
@@ -11,16 +11,11 @@ require("dotenv").config();
 const { Readable } = require('stream');
 const os = require('os');
 
-
-
-
-
 // ----------------------------------------------------------------------------
 // 🔑 ENV
 // ----------------------------------------------------------------------------
 const API_KEY = process.env.MINDEE_API_KEY;
 const MODEL_ID = process.env.MINDEE_MODEL_ID;
-
 
 console.log("====================================");
 console.log("🔍 ENV CHECK");
@@ -37,7 +32,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
-    icon: path.join(__dirname, process.platform === 'win32' ? 'icon.ico' : 'icon.png'),
+    icon: path.join(__dirname, 'icon.ico'),
     show: false,
     backgroundColor: '#1a1a2e',
     webPreferences: {
@@ -47,6 +42,9 @@ function createWindow() {
       sandbox: false,
     },
   });
+
+  // ✅ CHANGER LE TITRE ICI
+  mainWindow.setTitle('DocManager - Gestion CV & Factures');
 
   if (isDev) {
     mainWindow.loadURL("http://localhost:3000");
@@ -67,16 +65,9 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-
-
 // ============================================================================
 // 📡 CV BASE DE DONNE CRUD HANDLERS 
 // ============================================================================
-
-
-// Ajoutez ces handlers dans votre main.js Electron (dans la fonction registerHandlers)
-
-
 
 // Chemin vers le fichier de base de données CV
 const CV_DB_PATH = path.join(app.getPath('userData'), 'cv_database.json');
@@ -209,7 +200,6 @@ ipcMain.handle('export-cv-database', async () => {
     }
     
     // Demander où sauvegarder
-    const { dialog } = require('electron');
     const { filePath, canceled } = await dialog.showSaveDialog({
       title: 'Exporter la base de données CV',
       defaultPath: path.join(app.getPath('desktop'), `CVs_Export_${Date.now()}.xlsx`),
@@ -398,12 +388,6 @@ ipcMain.handle('get-cv-stats', async () => {
   }
 });
 
-console.log('✅ Handlers de gestion CV enregistrés');
-console.log(`📂 Base de données CV: ${CV_DB_PATH}`);
-
-
-
-
 // ============================================================================
 // 📡 MINDEE UPLOAD ➝ POLL ➝ RESULT
 // ============================================================================
@@ -465,7 +449,6 @@ async function pollMindee(jobId) {
   }
 }
 
-// ---- Extract only required fields ----
 function extractFields(inference) {
   const fields = inference?.result?.fields ?? {};
 
@@ -480,7 +463,6 @@ function extractFields(inference) {
   return data;
 }
 
-// ---- Vérifier et normaliser le fichier Excel ----
 function normalizeExcelFile(excelPath) {
   try {
     if (!fs.existsSync(excelPath)) {
@@ -491,10 +473,8 @@ function normalizeExcelFile(excelPath) {
     const sheetName = workbook.SheetNames[0] || "Reçus";
     const sheet = workbook.Sheets[sheetName];
     
-    // Lire toutes les données
     const allRows = XLSX.utils.sheet_to_json(sheet);
     
-    // Filtrer pour garder uniquement les 4 colonnes requises
     const normalizedRows = allRows.map(row => ({
       "Nom de place": row["Nom de place"] || row["Nom"] || row["nom"] || "N/A",
       "Date": row["Date"] || row["date"] || "N/A",
@@ -514,10 +494,9 @@ function normalizeExcelFile(excelPath) {
   }
 }
 
-
 // ============================================================================
-// 📡 affinda api
-// ===========================================================================
+// 📡 AFFINDA API
+// ============================================================================
 
 const affindaClient = new AffindaAPI(
   new AffindaCredential(process.env.AFFINDA_API_KEY)
@@ -532,7 +511,6 @@ ipcMain.handle("analyze-cv", async (_, fileData) => {
     if (!process.env.AFFINDA_RESUME_TYPE_ID)
       throw new Error("AFFINDA_RESUME_TYPE_ID missing");
 
-    // Build buffer/stream
     const buffer = Buffer.from(fileData.buffer);
     const stream = Readable.from(buffer);
     stream.name = fileData.fileName;
@@ -542,11 +520,9 @@ ipcMain.handle("analyze-cv", async (_, fileData) => {
     const document = await affindaClient.createDocument({
       file: stream,
       workspace: process.env.AFFINDA_WORKSPACE_ID,
-      documentType: process.env.AFFINDA_RESUME_TYPE_ID, // your actual resume parser ID
-      // AJOUTEZ CES PARAMÈTRES POUR LA LANGUE FRANÇAISE
-      language: 'fr', // Utilise 'fr' par défaut ou la langue envoyée
-      // Optionnel: vous pouvez aussi spécifier le pays
-      country: 'fr', // ou 'ma' pour Maroc, 'ca' pour Canada, etc.
+      documentType: process.env.AFFINDA_RESUME_TYPE_ID,
+      language: 'fr',
+      country: 'fr'
     });
 
     console.log("📊 Affinda RAW RESPONSE:", document);
@@ -583,9 +559,6 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
   console.log("📝 Génération résumé avec Affinda Summary Parser");
 
   try {
-    // ========================================
-    // 1. VALIDATION DES DONNÉES D'ENTRÉE
-    // ========================================
     if (!fileData?.buffer || !fileData?.fileName) {
       return { success: false, error: "Fichier manquant" };
     }
@@ -598,18 +571,12 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
       return { success: false, error: "AFFINDA_SUMMARY_TYPE_ID manquant dans .env" };
     }
 
-    // ========================================
-    // 2. PRÉPARATION DU FICHIER
-    // ========================================
     const buffer = Buffer.from(fileData.buffer);
     const stream = Readable.from(buffer);
     stream.name = fileData.fileName;
 
     console.log(`📤 Envoi à Affinda: ${fileData.fileName}`);
 
-    // ========================================
-    // 3. APPEL API AFFINDA
-    // ========================================
     const response = await affindaClient.createDocument({
       file: stream,
       workspace: process.env.AFFINDA_WORKSPACE_ID,
@@ -620,10 +587,6 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
 
     console.log("✅ Réponse Affinda reçue");
 
-    // ========================================
-    // 4. VÉRIFICATION DES ERREURS
-    // ========================================
-    
     if (response.meta?.failed) {
       console.error("❌ L'extraction Affinda a échoué");
       return { 
@@ -640,13 +603,8 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
       };
     }
 
-    // ========================================
-    // 5. EXTRACTION DU SUMMARY
-    // ========================================
-    
     const summaryObject = response.data.summary;
 
-    // Vérifier si summary existe
     if (!summaryObject) {
       console.error("❌ data.summary est null ou undefined");
       return { 
@@ -655,20 +613,14 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
       };
     }
 
-    // Extraire le texte du résumé
-    // Affinda retourne un objet avec { raw, parsed, ... }
     let summary = '';
     
     if (typeof summaryObject === 'string') {
-      // Cas simple (peu probable)
       summary = summaryObject;
     } else if (typeof summaryObject === 'object') {
-      // Cas normal: objet Affinda
-      // Priorité: parsed > raw
       summary = summaryObject.parsed || summaryObject.raw || '';
     }
 
-    // Vérifier si le summary est vide
     if (!summary || summary.trim().length === 0) {
       console.error("❌ Le résumé extrait est vide");
       console.log("📋 summaryObject:", JSON.stringify(summaryObject, null, 2));
@@ -680,20 +632,10 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
 
     console.log(`✅ Summary trouvé: ${summary.length} caractères`);
 
-    // ========================================
-    // 6. NETTOYAGE DU SUMMARY
-    // ========================================
-    
-    // Trim
     summary = summary.trim();
-    
-    // Supprimer les espaces multiples
     summary = summary.replace(/\s+/g, ' ');
-    
-    // Supprimer les sauts de ligne multiples (garder les doubles)
     summary = summary.replace(/\n{3,}/g, '\n\n');
     
-    // Limiter la longueur si nécessaire
     const MAX_LENGTH = 2000;
     if (summary.length > MAX_LENGTH) {
       console.log(`⚠️ Résumé long (${summary.length} caractères), troncation à ${MAX_LENGTH}`);
@@ -701,10 +643,6 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
     }
 
     console.log(`🎉 Résumé final: ${summary.length} caractères`);
-    
-    // ========================================
-    // 7. RETOUR DU RÉSULTAT
-    // ========================================
     
     return {
       success: true,
@@ -720,14 +658,8 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
     };
 
   } catch (err) {
-    // ========================================
-    // 8. GESTION DES ERREURS
-    // ========================================
-    
     console.error("❌ Erreur génération résumé:", err.message);
-    console.error("📋 Stack:", err.stack);
     
-    // Erreur réseau ou API
     if (err.response) {
       console.error("📋 Réponse HTTP:", err.response.status);
       console.error("📋 Données:", err.response.data);
@@ -738,14 +670,12 @@ ipcMain.handle("analyze-cv-for-summary", async (_, fileData) => {
       };
     }
     
-    // Erreur générale
     return { 
       success: false, 
       error: `Erreur: ${err.message}`
     };
   }
 });
-//////////////////////////////////////////////////
 
 ipcMain.handle('read-file-from-path', async (_, filePath) => {
   try {
@@ -767,13 +697,6 @@ ipcMain.handle('read-file-from-path', async (_, filePath) => {
   }
 });
 
-// ============================================================================
-// 📡 IPC HANDLERS POUR LA GESTION DES RÉSUMÉS
-// ============================================================================
-
-/**
- * Sauvegarder un résumé dans la base de données
- */
 ipcMain.handle('save-cv-summary-to-database', async (event, cvId, summary) => {
   try {
     console.log('💾 Sauvegarde résumé pour CV:', cvId);
@@ -785,7 +708,6 @@ ipcMain.handle('save-cv-summary-to-database', async (event, cvId, summary) => {
       return { success: false, error: 'CV non trouvé' };
     }
     
-    // Mettre à jour le CV avec le résumé
     cvs[cvIndex] = {
       ...cvs[cvIndex],
       summary: summary,
@@ -811,9 +733,6 @@ ipcMain.handle('save-cv-summary-to-database', async (event, cvId, summary) => {
   }
 });
 
-/**
- * Récupérer le résumé d'un CV
- */
 ipcMain.handle('get-cv-summary', async (event, cvId) => {
   try {
     const cvs = loadCVDatabase();
@@ -835,9 +754,6 @@ ipcMain.handle('get-cv-summary', async (event, cvId) => {
   }
 });
 
-/**
- * Mettre à jour le résumé d'un CV
- */
 ipcMain.handle('update-cv-summary', async (event, cvId, summary) => {
   try {
     console.log('📝 Mise à jour résumé pour CV:', cvId);
@@ -903,16 +819,16 @@ function registerHandlers() {
   });
 
   ipcMain.handle("select-files2", async () => {
-  const result = await dialog.showOpenDialog(mainWindow, {
-    properties: ["openFile", "multiSelections"],
-    filters: [
-      { name: "Images", extensions: ["jpg", "jpeg", "png"] }
-    ],
-  });
+    const result = await dialog.showOpenDialog(mainWindow, {
+      properties: ["openFile", "multiSelections"],
+      filters: [
+        { name: "Images", extensions: ["jpg", "jpeg", "png"] }
+      ],
+    });
 
-  if (result.canceled) return { success: false };
-  return { success: true, paths: result.filePaths };
-});
+    if (result.canceled) return { success: false };
+    return { success: true, paths: result.filePaths };
+  });
 
   // ✅ Sélectionner un fichier Excel existant
   ipcMain.handle("select-existing-excel", async () => {
@@ -931,7 +847,6 @@ function registerHandlers() {
 
     const excelPath = result.filePaths[0];
     
-    // Vérifier que le fichier est un Excel valide
     try {
       fs.accessSync(excelPath, fs.constants.R_OK);
       console.log("✅ Fichier Excel sélectionné:", excelPath);
@@ -941,8 +856,6 @@ function registerHandlers() {
       return null;
     }
   });
-
- 
 
   // ✅ Analyse reçu avec gestion des deux modes
   ipcMain.handle("analyse-recu", async (event, imgPath, excelPath) => {
@@ -986,7 +899,6 @@ function registerHandlers() {
         finalExcelPath = saveResult.filePath;
         console.log("📁 Nouveau fichier créé:", finalExcelPath);
         
-        // Créer un nouveau workbook
         workbook = XLSX.utils.book_new();
         rows = [];
       } 
@@ -1000,7 +912,6 @@ function registerHandlers() {
           sheetName = normalized.sheetName;
           console.log("📖 Fichier existant chargé:", rows.length, "lignes");
         } else {
-          // Si le fichier n'existe pas ou est invalide, créer un nouveau
           console.log("⚠️ Fichier non trouvé ou invalide, création nouveau");
           workbook = XLSX.utils.book_new();
           rows = [];
@@ -1017,16 +928,13 @@ function registerHandlers() {
 
       console.log("📝 Total lignes après ajout:", rows.length);
 
-      // Créer la feuille avec uniquement les 4 colonnes
       const ws = XLSX.utils.json_to_sheet(rows, {
         header: ["Nom de place", "Date", "Montant total", "Catégorie"]
       });
 
-      // Ajouter/remplacer la feuille dans le workbook
       workbook.Sheets[sheetName] = ws;
       workbook.SheetNames = [sheetName];
 
-      // Sauvegarder le fichier
       XLSX.writeFile(workbook, finalExcelPath, {
         bookType: 'xlsx',
         type: 'buffer',
@@ -1047,13 +955,6 @@ function registerHandlers() {
     }
   });
 }
-
-////////////////////////////////////////////////////////////////////////////////
-            // TELECHARGER CV FICIER 
-////////////////////////////////////////////////////////////////////////////////////////
-// Dans main.js, ajoutez ces handlers :
-
-
 
 // Handler pour vérifier si un CV existe déjà
 ipcMain.handle('check-cv-exists', async (_, email, name) => {
@@ -1091,8 +992,6 @@ ipcMain.handle('check-cv-exists', async (_, email, name) => {
   }
 });
 
-
-// Handler pour récupérer le contenu d'un CV
 ipcMain.handle('get-cv-content', async (_, cvId) => {
   try {
     const cvs = loadCVDatabase();
@@ -1113,7 +1012,6 @@ ipcMain.handle('get-cv-content', async (_, cvId) => {
   }
 });
 
-// Handler pour ouvrir un document
 ipcMain.handle("open-document", async (_, filePath) => {
   try {
     console.log("📂 Ouverture du document:", filePath);
@@ -1133,7 +1031,6 @@ ipcMain.handle("open-document", async (_, filePath) => {
   }
 });
 
-// Autres handlers déjà existants...
 ipcMain.handle('get-download-directory', async () => {
   return path.join(os.homedir(), 'Downloads');
 });
@@ -1145,6 +1042,8 @@ ipcMain.handle('file-exists', async (_, filePath) => {
     return false;
   }
 });
+
+
 
 ipcMain.handle('save-file', async (_, data, fileName) => {
   try {
@@ -1163,3 +1062,59 @@ ipcMain.handle('save-file', async (_, data, fileName) => {
     return { success: false, error: err.message };
   }
 });
+
+
+
+// PAR CE CODE :
+ipcMain.handle('update-cv', async (event, cv) => {
+  try {
+    console.log('✏️ Mise à jour CV:', cv.id, cv.name);
+    
+    const cvs = loadCVDatabase();
+    const cvIndex = cvs.findIndex(c => c.id === cv.id);
+    
+    if (cvIndex === -1) {
+      console.error('❌ CV non trouvé pour mise à jour:', cv.id);
+      return { success: false, error: 'CV non trouvé' };
+    }
+    
+    // Mettre à jour le CV existant
+    const updatedCV = {
+      ...cvs[cvIndex], // Garder les données existantes
+      ...cv,           // Appliquer les nouvelles données
+      // S'assurer que certains champs critiques restent
+      id: cv.id, 
+      filePath: cvs[cvIndex].filePath,
+      fileName: cvs[cvIndex].fileName,
+      uploadDate: cvs[cvIndex].uploadDate,
+      fileContent: cvs[cvIndex].fileContent,
+      // Mettre à jour la date de modification
+      lastModified: new Date().toISOString()
+    };
+    
+    cvs[cvIndex] = updatedCV;
+    
+    // Sauvegarder dans le fichier JSON
+    const saved = saveCVDatabase(cvs);
+    
+    if (saved) {
+      console.log('✅ CV mis à jour avec succès:', cv.name);
+      return { 
+        success: true, 
+        message: 'CV mis à jour avec succès' 
+      };
+    } else {
+      console.error('❌ Erreur sauvegarde lors de la mise à jour');
+      return { 
+        success: false, 
+        error: 'Erreur lors de la sauvegarde' 
+      };
+    }
+  } catch (err) {
+    console.error('Erreur update-cv:', err);
+    return { success: false, error: err.message };
+  }
+});
+
+console.log('✅ Handlers de gestion CV enregistrés');
+console.log(`📂 Base de données CV: ${CV_DB_PATH}`);

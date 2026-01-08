@@ -427,299 +427,293 @@ function GenerationFacture() {
         })
       );
 
-// RIB sous forme de texte - Souligné
-children.push(
-  new Paragraph({
-    children: [new TextRun({ 
-      text: "Relevé d'Identité Bancaire (RIB) : ", 
-      size: 22,
-      underline: {},
-      bold: true
-    })],
-    spacing: { after: 350 },
-  })
-);
+      // RIB sous forme de texte - Souligné
+      children.push(
+        new Paragraph({
+          children: [new TextRun({ 
+            text: "Relevé d'Identité Bancaire (RIB) : ", 
+            size: 22,
+            underline: {},
+            bold: true
+          })],
+          spacing: { after: 350 },
+        })
+      );
 
-
-// RIB - Tableau avec 4 lignes
-children.push(
-  new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    rows: [
-      // Ligne 1: Domiciliation (1ère cellule fusionnée sur 2 colonnes, 2ème cellule fusionnée sur 3 colonnes)
-      new TableRow({
-        children: [
-          new TableCell({
-            width: { size: 30, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            columnSpan: 2,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "Domiciliation :",
-                    size: 16,
-                    color: "666666"
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 70, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            columnSpan: 3,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "Banque populaire",
-                    size: 16
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-        ],
-      }),
-      
-      // Ligne 2: Agence (1ère cellule fusionnée sur 2 colonnes, 2ème cellule fusionnée sur 3 colonnes)
-      new TableRow({
-        children: [
-          new TableCell({
-            width: { size: 30, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            columnSpan: 2,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "Agence :",
-                    size: 16,
-                    color: "666666"
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 70, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            columnSpan: 3,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "OULAD HADDOU",
-                    size: 16
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-        ],
-      }),
-      
-      // Ligne 3: En-têtes RIB (5 cellules)
-      new TableRow({
-        children: [
-          new TableCell({
-            width: { size: 15, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "Code Banque",
-                    size: 14,
-                    color: "666666"
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 15, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "Code Ville",
-                    size: 14,
-                    color: "666666"
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 15, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "Code Guichet",
-                    size: 14,
-                    color: "666666"
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 40, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "Numéro de Compte",
-                    size: 14,
-                    color: "666666"
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 15, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "Clé RIB",
-                    size: 14,
-                    color: "666666"
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-        ],
-      }),
-      
-      // Ligne 4: Valeurs RIB (5 cellules)
-      new TableRow({
-        children: [
-          new TableCell({
-            width: { size: 15, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "190",
-                    size: 16
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 15, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "780",
-                    size: 16
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 15, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "212",
-                    size: 16
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 40, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "1142403260003",
-                    size: 16
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-          new TableCell({
-            width: { size: 15, type: WidthType.PERCENTAGE },
-            verticalAlign: VerticalAlign.CENTER,
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: "35",
-                    size: 16
-                  })
-                ],
-                alignment: AlignmentType.CENTER,
-                spacing: { before: 50, after: 50 },
-              }),
-            ],
-          }),
-        ],
-      }),
-    ],
-    borders: {
-      top: { style: BorderStyle.SINGLE, size: 6, color: "CCCCCC" },
-      bottom: { style: BorderStyle.SINGLE, size: 6, color: "CCCCCC" },
-      left: { style: BorderStyle.SINGLE, size: 6, color: "CCCCCC" },
-      right: { style: BorderStyle.SINGLE, size: 6, color: "CCCCCC" },
-      insideHorizontal: { style: BorderStyle.SINGLE, size: 4, color: "CCCCCC" },
-      insideVertical: { style: BorderStyle.SINGLE, size: 4, color: "CCCCCC" },
-    },
-  })
-);
- 
-
-
-
-
+      // RIB - Tableau avec 4 lignes
+      children.push(
+        new Table({
+          width: { size: 100, type: WidthType.PERCENTAGE },
+          rows: [
+            // Ligne 1: Domiciliation (1ère cellule fusionnée sur 2 colonnes, 2ème cellule fusionnée sur 3 colonnes)
+            new TableRow({
+              children: [
+                new TableCell({
+                  width: { size: 30, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  columnSpan: 2,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "Domiciliation :",
+                          size: 16,
+                          color: "666666"
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 70, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  columnSpan: 3,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "Banque populaire",
+                          size: 16
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+              ],
+            }),
+            
+            // Ligne 2: Agence (1ère cellule fusionnée sur 2 colonnes, 2ème cellule fusionnée sur 3 colonnes)
+            new TableRow({
+              children: [
+                new TableCell({
+                  width: { size: 30, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  columnSpan: 2,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "Agence :",
+                          size: 16,
+                          color: "666666"
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 70, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  columnSpan: 3,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "OULAD HADDOU",
+                          size: 16
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+              ],
+            }),
+            
+            // Ligne 3: En-têtes RIB (5 cellules)
+            new TableRow({
+              children: [
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "Code Banque",
+                          size: 14,
+                          color: "666666"
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "Code Ville",
+                          size: 14,
+                          color: "666666"
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "Code Guichet",
+                          size: 14,
+                          color: "666666"
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 40, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "Numéro de Compte",
+                          size: 14,
+                          color: "666666"
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "Clé RIB",
+                          size: 14,
+                          color: "666666"
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+              ],
+            }),
+            
+            // Ligne 4: Valeurs RIB (5 cellules)
+            new TableRow({
+              children: [
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "190",
+                          size: 16
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "780",
+                          size: 16
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "212",
+                          size: 16
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 40, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "1142403260003",
+                          size: 16
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "35",
+                          size: 16
+                        })
+                      ],
+                      alignment: AlignmentType.CENTER,
+                      spacing: { before: 50, after: 50 },
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+          borders: {
+            top: { style: BorderStyle.SINGLE, size: 6, color: "CCCCCC" },
+            bottom: { style: BorderStyle.SINGLE, size: 6, color: "CCCCCC" },
+            left: { style: BorderStyle.SINGLE, size: 6, color: "CCCCCC" },
+            right: { style: BorderStyle.SINGLE, size: 6, color: "CCCCCC" },
+            insideHorizontal: { style: BorderStyle.SINGLE, size: 4, color: "CCCCCC" },
+            insideVertical: { style: BorderStyle.SINGLE, size: 4, color: "CCCCCC" },
+          },
+        })
+      );
 
       // Création du document
       const doc = new Document({
@@ -772,12 +766,27 @@ children.push(
 
   const { sousTotal, montantTVA, total } = calculerTotal();
 
+  // Styles CSS pour désactiver les flèches dans les inputs number
+  const styleCSS = `
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+  `;
+
   return (
     <div style={{ 
       padding: '15px',
       background: '#0f172a',
       minHeight: '100vh'
     }}>
+      {/* Ajout du style CSS */}
+      <style>{styleCSS}</style>
       
       {message.text && (
         <div style={{ 
@@ -1012,6 +1021,8 @@ children.push(
               onChange={handleChange}
               min="0"
               max="100"
+              step="0.01"
+              onWheel={(e) => e.target.blur()} // Désactive le scroll de la souris
               style={{
                 padding: '10px', // Augmenté
                 borderRadius: '4px',
@@ -1116,6 +1127,13 @@ children.push(
                     min="0.01"
                     step="0.01"
                     placeholder="Qté"
+                    onWheel={(e) => e.target.blur()} // Désactive le scroll de la souris
+                    onKeyDown={(e) => {
+                      // Permet seulement les touches: chiffres, point, backspace, delete, tab, flèches
+                      if (!/[\d\.]|Backspace|Delete|Tab|ArrowLeft|ArrowRight|ArrowUp|ArrowDown/.test(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
                     style={{
                       padding: '10px', // Augmenté
                       borderRadius: '4px',
@@ -1136,6 +1154,13 @@ children.push(
                     min="0"
                     step="0.01"
                     placeholder="Prix (MAD)"
+                    onWheel={(e) => e.target.blur()} // Désactive le scroll de la souris
+                    onKeyDown={(e) => {
+                      // Permet seulement les touches: chiffres, point, backspace, delete, tab, flèches
+                      if (!/[\d\.]|Backspace|Delete|Tab|ArrowLeft|ArrowRight|ArrowUp|ArrowDown/.test(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
                     style={{
                       padding: '10px', // Augmenté
                       borderRadius: '4px',

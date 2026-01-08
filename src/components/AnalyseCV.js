@@ -15,6 +15,10 @@ function AnalyseCV() {
   const [showingSummary, setShowingSummary] = useState(null);
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [summaryError, setSummaryError] = useState('');
+  
+  // Nouveaux états pour les modifications
+  const [selectedDomain, setSelectedDomain] = useState('');
+  const [editingCV, setEditingCV] = useState(null);
 
   // Domaines de formation
   const DOMAIN_RULES = [
@@ -647,20 +651,100 @@ function AnalyseCV() {
     }
   };
 
+  // Fonction pour exporter en Excel (CSV)
+  // Remplacer la fonction d'export existante par celle-ci :
+const exportToExcel = () => {
+  if (filteredCVs.length === 0) {
+    alert("Aucun CV à exporter");
+    return;
+  }
+
+  // Préparer les en-têtes avec encodage UTF-8 BOM
+  const headers = [
+    "Nom",
+    "Email",
+    "Téléphone",
+    "Domaine principal",
+    "Domaines",
+    "Années d'expérience",
+    "Localisation"
+  ];
+
+  // Préparer les données avec traitement des accents
+  const rows = filteredCVs.map(cv => [
+    cv.name || '',
+    cv.email || '',
+    cv.phone || '',
+    cv.mainDomain || '',
+    (cv.domains || []).join(' | '),
+    cv.totalYearsExperience || 0,
+    cv.location || ''
+  ]);
+
+  // Créer le contenu CSV avec séparateur point-virgule et encodage UTF-8
+  let csvContent = '\uFEFF'; // BOM pour UTF-8 (Excel)
+  csvContent += headers.join(";") + "\n";
+  csvContent += rows.map(row => 
+    row.map(cell => {
+      // Échapper les cellules contenant des guillemets ou des sauts de ligne
+      if (typeof cell === 'string') {
+        // Remplacer les accents et caractères spéciaux pour Excel
+        const escaped = cell
+          .replace(/"/g, '""') // Échapper les guillemets doubles
+          .replace(/\n/g, ' ') // Remplacer les sauts de ligne par des espaces
+          .replace(/\r/g, ''); // Supprimer les retours chariot
+        
+        // Encadrer de guillemets si nécessaire
+        if (escaped.includes(';') || escaped.includes('"') || escaped.includes('\n')) {
+          return `"${escaped}"`;
+        }
+        return escaped;
+      }
+      return cell;
+    }).join(";")
+  ).join("\n");
+
+  // Créer le blob avec l'encodage UTF-8
+  const blob = new Blob([csvContent], { 
+    type: "text/csv;charset=utf-8;" 
+  });
+  
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  
+  // Nom du fichier avec date
+  const dateStr = new Date().toISOString().split('T')[0];
+  a.download = `CV_Database_${dateStr}.csv`;
+  a.href = url;
+  
+  document.body.appendChild(a);
+  a.click();
+  
+  // Nettoyer
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }, 100);
+  
+  console.log(`✅ Export Excel terminé: ${filteredCVs.length} CVs exportés`);
+};
+
+  // Filtrer les CVs selon les critères
   const filteredCVs = savedCVs.filter(cv => {
     const matchesExperience = minYearsExp ? 
       cv.totalYearsExperience >= parseInt(minYearsExp) : true;
     
-    if (!searchQuery) return matchesExperience;
+    const matchesDomain = selectedDomain
+      ? cv.domains?.includes(selectedDomain)
+      : true;
+
+    if (!searchQuery) return matchesExperience && matchesDomain;
     
     const query = searchQuery.toLowerCase();
-    const matchesDomain = cv.domains?.some(domain => 
-      domain.toLowerCase().includes(query)
-    );
     const matchesName = cv.name?.toLowerCase().includes(query);
     const matchesText = cv.rawText?.toLowerCase().includes(query);
     
-    return (matchesDomain || matchesName || matchesText) && matchesExperience;
+    return (matchesName || matchesText) && matchesExperience && matchesDomain;
   });
 
   return (
@@ -813,13 +897,17 @@ function AnalyseCV() {
       {viewMode === 'database' && (
         <div className="database-section">
           <div className="search-filters">
-            <input
-              type="text"
-              placeholder="🔍 Rechercher par domaine ou nom..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+            <select
+              value={selectedDomain}
+              onChange={(e) => setSelectedDomain(e.target.value)}
               className="search-input"
-            />
+            >
+              <option value="">🎯 Tous les domaines</option>
+              {DOMAIN_RULES.map(d => (
+                <option key={d.key} value={d.label}>{d.label}</option>
+              ))}
+            </select>
+            
             <input
               type="number"
               placeholder="Années d'expérience min"
@@ -828,11 +916,18 @@ function AnalyseCV() {
               className="search-input"
               min="0"
             />
+            
+        
+            
             <button 
-              onClick={() => { setSearchQuery(''); setMinYearsExp(''); }}
+              onClick={() => { setSearchQuery(''); setMinYearsExp(''); setSelectedDomain(''); }}
               className="reset-btn"
             >
               🔄 Réinitialiser
+            </button>
+            
+            <button className="reset-btn" onClick={exportToExcel}>
+              📤 Exporter Excel
             </button>
           </div>
 
@@ -856,6 +951,13 @@ function AnalyseCV() {
                     {cv.mainDomain && <div className="cv-domain">🎯 {cv.mainDomain}</div>}
                   </div>
                   <div className="cv-actions">
+                    <button 
+                      onClick={() => setEditingCV(cv)}
+                      className="action-btn edit"
+                      title="Modifier"
+                    >
+                      ✏️
+                    </button>
                     <button 
                       onClick={() => generateSummary(cv)} 
                       className="action-btn summary"
@@ -940,6 +1042,109 @@ function AnalyseCV() {
             </div>
             <div className="summary-footer">
               <small>Ce résumé est stocké dans la base de données pour une réutilisation ultérieure</small>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL ÉDITION CV */}
+      {editingCV && (
+        <div className="summary-modal" onClick={() => setEditingCV(null)}>
+          <div className="summary-content" onClick={(e) => e.stopPropagation()}>
+            <div className="summary-header">
+              <h3>✏️ Modifier le profil</h3>
+              <button onClick={() => setEditingCV(null)} className="close-btn">✕</button>
+            </div>
+            <div className="summary-body">
+              <div className="edit-form">
+                <div className="form-group">
+                  <label>Nom</label>
+                  <input
+                    value={editingCV.name}
+                    onChange={e => setEditingCV({ ...editingCV, name: e.target.value })}
+                    placeholder="Nom"
+                    className="search-input"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    value={editingCV.email || ''}
+                    onChange={e => setEditingCV({ ...editingCV, email: e.target.value })}
+                    placeholder="Email"
+                    className="search-input"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Téléphone</label>
+                  <input
+                    value={editingCV.phone || ''}
+                    onChange={e => setEditingCV({ ...editingCV, phone: e.target.value })}
+                    placeholder="Téléphone"
+                    className="search-input"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Localisation</label>
+                  <input
+                    value={editingCV.location || ''}
+                    onChange={e => setEditingCV({ ...editingCV, location: e.target.value })}
+                    placeholder="Localisation"
+                    className="search-input"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Années d'expérience</label>
+                  <input
+                    type="number"
+                    value={editingCV.totalYearsExperience || 0}
+                    onChange={e => setEditingCV({ ...editingCV, totalYearsExperience: parseInt(e.target.value) || 0 })}
+                    placeholder="Années d'expérience"
+                    className="search-input"
+                    min="0"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Domaine principal</label>
+                  <select
+                    value={editingCV.mainDomain}
+                    onChange={e => setEditingCV({ ...editingCV, mainDomain: e.target.value })}
+                    className="search-input"
+                  >
+                    <option value="">Sélectionner un domaine</option>
+                    {DOMAIN_RULES.map(d => (
+                      <option key={d.key} value={d.label}>{d.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="summary-footer">
+              <button
+                className="reset-btn"
+                onClick={async () => {
+                  try {
+                    const result = await window.api.updateCV(editingCV);
+                    if (result.success) {
+                      await loadSavedCVs();
+                      setEditingCV(null);
+                      alert("✅ Profil mis à jour avec succès!");
+                    } else {
+                      alert("❌ Erreur lors de la mise à jour: " + result.error);
+                    }
+                  } catch (err) {
+                    console.error("Erreur mise à jour CV:", err);
+                    alert("❌ Erreur lors de la mise à jour");
+                  }
+                }}
+              >
+                💾 Enregistrer
+              </button>
             </div>
           </div>
         </div>
